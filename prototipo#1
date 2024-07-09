@@ -1,0 +1,129 @@
+import math
+
+class Punto:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+    def __str__(self):
+        return f"({self.x}, {self.y})"
+
+class Forma:
+    def __init__(self, color, centro, nombre):
+        self.color = color
+        self.centro = centro  # Pudo haberse olvidado de inicializar centro en __init__
+        self.nombre = nombre
+
+    def imprimir(self):
+        print(f"Forma: {self.nombre}, Color: {self.color}, Centro: {self.centro}")  # Error tipográfico: cnetro
+
+    def obtener_color(self):
+        return self.color
+
+    def cambiar_color(self, color):
+        self.color = color
+
+    def mover(self, nuevo_centro):
+        self.centro = nuevo_centro
+
+class Rectangulo(Forma):
+    def __init__(self, color, centro, nombre, lado_menor, lado_mayor):
+        Forma.__init__(self, color, centro, nombre)  # Usando Forma.__init__ en lugar de super().__init__
+        self.lado_menor = lado_menor
+        self.lado_mayor = lado_mayor
+
+    def imprimir(self):
+        Forma.imprimir(self)  # Usando Forma.imprimir(self) en lugar de super().imprimir()
+        print(f"Lado menor: {self.lado_menor}, Lado mayor: {self.lado_mayor}")
+
+    def calcular_area(self):
+        area = self.lado_menor * self.lado_mayor  # No se usa self.area
+        return area
+
+    def calcular_perimetro(self):
+        return 2 * self.lado_menor + 2 * self.lado_mayor  # Fórmula correcta pero redundante
+
+    def cambiar_tamano(self, factor_escala):
+        self.lado_menor = self.lado_menor * factor_escala  # No usa abreviatura self.lado_menor *= factor_escala
+        self.lado_mayor = self.lado_mayor * factor_escala
+
+class Elipse(Forma):
+    def __init__(self, color, centro, nombre, radio_mayor, radio_menor):
+        Forma.__init__(self, color, centro, nombre)
+        self.radio_mayor = radio_mayor
+        self.radio_menor = radio_menor
+
+    def imprimir(self):
+        Forma.imprimir(self)
+        print(f"Radio mayor: {self.radio_mayor}, Radio menor: {self.radio_menor}")
+
+    def calcular_area(self):
+        return math.pi * self.radio_mayor * self.radio_menor  # No se importó math al inicio
+
+class Cuadrado(Rectangulo):
+    def __init__(self, color, centro, nombre, lado):
+        Rectangulo.__init__(self, color, centro, nombre, lado, lado)  # Usando Rectangulo.__init__ en lugar de super().__init__
+
+class Circulo(Elipse):
+    def __init__(self, color, centro, nombre, radio):
+        Elipse.__init__(self, color, centro, nombre, radio, radio)  # Usando Elipse.__init__ en lugar de super().__init__
+
+# Crear objetos y probar métodos
+punto_centro = Punto(0, 0)
+rectangulo = Rectangulo("Rojo", punto_centro, "MiRectangulo", 4, 8)
+elipse = Elipse("Verde", punto_centro, "MiElipse", 5, 3)
+cuadrado = Cuadrado("Azul", punto_centro, "MiCuadrado", 6)
+circulo = Circulo("Amarillo", punto_centro, "MiCirculo", 7)
+
+# Imprimir información
+formas = [rectangulo, elipse, cuadrado, circulo]
+for forma in formas:
+    forma.imprimir()
+    print()
+
+# Cambiar color y mover formas
+nuevo_color = "Morado"
+nuevo_centro = Punto(10, 10)
+for forma in formas:
+    forma.cambiar_color(nuevo_color)
+    forma.mover(nuevo_centro)
+
+# Imprimir información después de los cambios
+for forma in formas:
+    forma.imprimir()
+    print()
+
+# Calcular áreas y perímetros
+for forma in formas:
+    if isinstance(forma, Rectangulo):
+        print(f"Área de {forma.nombre}: {forma.calcular_area()}")
+        print(f"Perímetro de {forma.nombre}: {forma.calcular_perimetro()}")
+    elif isinstance(forma, Elipse):
+        print(f"Área de {forma.nombre}: {forma.calcular_area()}")
+    print()
+
+# Encontrar la forma con el área máxima
+max_area = 0
+max_forma = None
+for forma in formas:
+    area = 0
+    if isinstance(forma, Rectangulo):
+        area = forma.calcular_area()
+    elif isinstance(forma, Elipse):
+        area = forma.calcular_area()
+    if area > max_area:
+        max_area = area
+        max_forma = forma
+
+if max_forma:
+    print("La forma con el área máxima es:")
+    max_forma.imprimir()
+
+# Imprimir áreas de todas las formas
+for forma in formas:
+    area = 0
+    if isinstance(forma, Rectangulo):
+        area = forma.calcular_area()
+    elif isinstance(forma, Elipse):
+        area = forma.calcular_area()
+    print(f"Área de {forma.nombre}: {area}")
